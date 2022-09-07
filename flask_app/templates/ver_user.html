@@ -1,0 +1,26 @@
+{% extends "/base.html" %}
+{% block titulo %}{% endblock %}
+
+
+
+{% block contenido %}
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand p-1 mt-3 ms-3 border border-light rounded" href="{{url_for('index')}}">
+    Home
+    </a>
+</nav>
+
+<header class='container'>
+    <h1>{{Nombre}}</h1>
+</header>
+<div class="card mx-auto " style="width: 18rem;">
+    <img class="card-img-top" src="{{ url_for('static', filename='perfil-empty.png') }}" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">{{user.nombre}} {{user.apellido}}</h5>
+        <p class="card-text">Email: {{user.email}}</p>
+        <p class="card-text">Creado: {{user.created_at}}</p>
+        <p class="card-text">Ultima actualizacion: {{user.update_at}}</p>
+        <a href="{{url_for('editar_user', id=user.id)}}" class="btn btn-primary ms-4">Editar</a> <a href="{{url_for('destroy', id=user.id)}}" class="btn btn-primary ms-5">Borrar</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "/base.html" %}
+{% block titulo %}{% endblock %}
+
+
+
+{% block contenido %}
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand p-1 mt-3 ms-3 border border-light rounded" href="#">
+        Database
+    </a>
+</nav>
+<div class="container mt-5">
+            <h1>Lista de Usuarios</h1>
+            <hr>
+            <table id="mi_tabla" class="display">
+                <thead>
+                    <tr>
+                        <th>ID</th> 
+                        <th>Nombre Completo</th> 
+                        <th>Email</th>
+                        <th>Inscrito</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for amigo in template_users %}
+                    <tr>
+                        <td> {{amigo.id}}</td>
+                        <td> {{amigo.nombre}} {{amigo.apellido}}</td>
+                        <td> {{amigo.email}}</td>
+                        <td> {{amigo.created_at}}</td>
+                        <td><a href="{{url_for('ver_user', id=amigo.id)}}">Mostrar</a> <a href="{{url_for('editar_user', id=amigo.id)}}">Editar</a> <a href="/user/destroy/{{amigo.id}}">Eliminar</a></td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a class="btn btn-primary" href="{{url_for('crear_user')}}" role="button">Agregar usuario</a>
+</div>
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#mi_tabla').DataTable();
+    });
+</script>
+
+{% endblock %}
+
+{% endblock %}
