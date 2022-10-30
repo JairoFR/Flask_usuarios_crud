@@ -1,4 +1,4 @@
-#   Flask_Mysql: Usuario CR
+#   Flask_Mysql: Usuario CRUD
 
 ## Contenido
 
