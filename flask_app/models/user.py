@@ -1,20 +1,23 @@
-# importar la función que devolverá una instancia de una conexión
+import os
 from flask_app.config.mysqlconnection import connectToMySQL
-# modelar la clase después de la tabla user de nuestra base de datos
-class User:   
+
+class User:  
+
+    modelo = 'usuarios'
+
     def __init__( self , data ):
         self.id = data['id']
-        self.nombre= data['first_name']
-        self.apellido = data['last_name']
+        self.nombre= data['nombre']
+        self.apellido = data['apellido']
         self.email = data['email']
         self.created_at = data['created_at']
-        self.update_at = data['update_at']
-    # ahora usamos métodos de clase para consultar nuestra base de datos
+        self.updated_at = data['updated_at']
+
     @classmethod
     def get_all(cls):
-        query = "SELECT * FROM users;"
+        query = f"SELECT * FROM {cls.modelo};"
         # asegúrate de llamar a la función connectToMySQL con el esquema al que te diriges
-        results = connectToMySQL('esquema_users').query_db(query)
+        results = connectToMySQL(os.environ.get("BASE_DATOS_NOMBRE")).query_db(query)
         # crear una lista vacía para agregar nuestras instancias de friends
         users = []
         # Iterar sobre los resultados de la base de datos y crear instancias de friends con cls
@@ -24,9 +27,9 @@ class User:
 
     @classmethod
     def get_by_id(cls, id):
-        query = f"SELECT * FROM users where id = %(id)s;"
+        query = f"SELECT * FROM {cls.modelo} where id = %(id)s;"
         data = { 'id' : id }
-        results = connectToMySQL('esquema_users').query_db(query, data)
+        results = connectToMySQL(os.environ.get("BASE_DATOS_NOMBRE")).query_db(query, data)
         #if len(results) > 0:
         #    return cls(results[0])
         #else:
@@ -35,18 +38,17 @@ class User:
 
     @classmethod
     def save(cls, data ):
-        query = "INSERT INTO users ( first_name , last_name , email , created_at, update_at ) VALUES ( %(nombre)s , %(apellido)s , %(email)s , NOW() , NOW() );"
+        query = f"INSERT INTO {cls.modelo} ( nombre , apellido , email , created_at, updated_at ) VALUES ( %(nombre)s , %(apellido)s , %(email)s , NOW() , NOW() );"
         # data es un diccionario que se pasará al método de guardar desde server.py
-        return connectToMySQL('esquema_users').query_db( query, data )     
+        return connectToMySQL(os.environ.get("BASE_DATOS_NOMBRE")).query_db( query, data )     
 
     @classmethod
     def update(cls,data):
-        query = "UPDATE users SET first_name=%(first_name)s,last_name=%(last_name)s,email=%(email)s,update_at=NOW() WHERE id = %(id)s;"
-        resultado = connectToMySQL('esquema_users').query_db(query, data)
-        print("RESULTADO: ", resultado)
+        query = f"UPDATE {cls.modelo} SET nombre=%(nombre)s, apellido=%(apellido)s, email=%(email)s, updated_at=NOW() WHERE id = %(id)s;"
+        resultado = connectToMySQL(os.environ.get("BASE_DATOS_NOMBRE")).query_db(query, data)
         return resultado
 
     @classmethod
     def destroy(cls,data):
-        query  = "DELETE FROM users WHERE id = %(id)s;"
-        return connectToMySQL('esquema_users').query_db(query,data)
+        query  = f"DELETE FROM {cls.modelo} WHERE id = %(id)s;"
+        return connectToMySQL(os.environ.get("BASE_DATOS_NOMBRE")).query_db(query,data)
